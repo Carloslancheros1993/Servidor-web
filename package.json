@@ -1,0 +1,17 @@
+{
+  "name": "servidor-web",
+  "version": "1.0.0",
+  "description": "Servidor web",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Carlos Lancheros",
+  "license": "ISC",
+  "dependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.7"
+  }
+}
