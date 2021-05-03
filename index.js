@@ -1,26 +1,32 @@
-const { doesNotMatch } = require("assert");
 let http = require("http");
-let morgan = require("morgan");
-
-let logger = morgan('dev');//method:url :status : res[content-lenth] - res time
-
+let fs = require("fs");
 
 http.createServer((req, res) => {
-    logger(req, res, (err) => {
-        if (err) return done(err)
-
         if(req.url === "/contacto") {
             res.setHeader("Content-Type", "text/html; charset=utf-8");
-            res.write("<h1>Pagina de contacto</h1>");
-            res.end();
-        }else if(req.url === "/"){
-            res.setHeader("Content-Type", "text/html; charset=utf-8");
+            fs.readFile("./contact.html", (error, content) => {
+                if(!error){
+                    res.write(content);
+                    res.end();
+                }else{
+                    res.write("<h1>404</h1>");
+                    res.end();
+                }
+            });
+        } else if (req.url === "/"){
             res.write("<h1>página de inicio</h1>");
             res.end();
-        }else{
-            res.setHeader("Content-Type", "text/html; charset=utf-8");
+        } else if (req.url === "/usuarios") {
+            res.setHeader("Content-Type", "application/json; charset=utf-8");
+            let users = [{
+                nombre: "Javier",
+                email: "javier09@gmail.com"
+            }]
+            res.write(JSON.stringify(users));
+            res.end();
+        }
+        else{
             res.write("<h1>404</h1>");
             res.end();
         }
-    });
 }).listen(8080);
