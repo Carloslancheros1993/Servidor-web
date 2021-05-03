@@ -2,31 +2,36 @@ let http = require("http");
 let fs = require("fs");
 
 http.createServer((req, res) => {
-        if(req.url === "/contacto") {
-            res.setHeader("Content-Type", "text/html; charset=utf-8");
-            fs.readFile("./contact.html", (error, content) => {
-                if(!error){
-                    res.write(content);
-                    res.end();
-                }else{
-                    res.write("<h1>404</h1>");
-                    res.end();
-                }
-            });
-        } else if (req.url === "/"){
-            res.write("<h1>página de inicio</h1>");
-            res.end();
-        } else if (req.url === "/usuarios") {
-            res.setHeader("Content-Type", "application/json; charset=utf-8");
-            let users = [{
-                nombre: "Javier",
-                email: "javier09@gmail.com"
-            }]
-            res.write(JSON.stringify(users));
-            res.end();
-        }
-        else{
-            res.write("<h1>404</h1>");
-            res.end();
-        }
+    res.setHeader("Content-Type", "text/html; charset=utf-8");
+    switch(req.url){
+        case "/contacto":
+            readFile("./contact.html", res);
+            break;
+        case "/":
+            readFile("./index.html", res);
+            break;
+        case "/nosotros":
+            readFile("./about.html", res);
+            break;
+        case "/proyectos":
+            readFile("./projects.html", res);
+            break;
+        case "/favicon.ico":
+            res.setHeader("Content-Type", "image/x-icon");
+            readFile("./favicon.ico", res);
+            break;
+        default:
+            res.statusCode = 404;
+            readFile("./404.html", res);
+            break;
+    }
 }).listen(8080);
+               
+const readFile = (path, res) => {
+    fs.readFile(path, (error, content) => {
+        if(!error){
+            res.write(content);
+            res.end();
+        }
+    })
+}
