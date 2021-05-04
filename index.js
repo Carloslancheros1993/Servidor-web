@@ -1,9 +1,9 @@
 let http = require("http");
 let fs = require("fs");
 let path = require("path");
+let mime = require("mime");
 
 http.createServer((req, res) => {
-    res.setHeader("Content-Type", "text/html; charset=utf-8");
     switch(req.url){
         case "/contacto":
             readFile("/contact.html", res);
@@ -32,22 +32,11 @@ const readFile = (url, res) => {
     //__dirname ruta absoluta
     fs.readFile( urlF, (error, content) => {
         if(!error){
-            setContentType(path.extname(urlF), res);
-            //res.setHeader("Content-Type", "text/css");
+            res.setHeader("Content-Type", mime.getType(urlF));
             res.end(content);
         }else{
-            //response.statusCode = 404;
             res.writeHead(404);
             res.end("<h1>404</h1>")
         }
     });
-}
-
-//cambiar cabecera dependiendo del tipo
-const setContentType = (ext, res) => {
-    if (ext == ".css"){
-        res.setHeader("Content-Type", "text/css");
-    }else if(ext === ".html"){
-        res.setHeader("Content-Type", "text/html");
-    }
 }
